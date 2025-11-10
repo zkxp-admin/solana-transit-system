@@ -3,8 +3,8 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct FareConfig {
 	pub admin: Pubkey,
-	pub mode_0_fare: u64,
-	pub mode_1_fare: u64,
+	pub bus_fare: u64,        // Transport mode 0: bus fare amount
+	pub train_fare: u64,      // Transport mode 1: train fare amount
 	pub currency_mint: Pubkey,
 	pub total_tickets_sold: u64,
 	// Subscription pricing

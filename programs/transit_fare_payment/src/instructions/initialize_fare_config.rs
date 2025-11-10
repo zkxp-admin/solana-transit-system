@@ -31,8 +31,8 @@ pub struct InitializeFareConfig<'info> {
 /// 3. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
-/// - mode_0_fare: [u64] Default transport mode 0 fare amount
-/// - mode_1_fare: [u64] Default transport mode 1 fare amount
+/// - mode_0_fare: [u64] Default bus fare amount (transport mode 0 = bus)
+/// - mode_1_fare: [u64] Default train fare amount (transport mode 1 = train)
 /// - currency_mint: [Pubkey] Currency mint address
 /// - monthly_pass_price: [u64] Price for 30-day subscription
 /// - yearly_pass_price: [u64] Price for 365-day subscription
@@ -46,8 +46,8 @@ pub fn handler(
 ) -> Result<()> {
     ctx.accounts.fare_config.set_inner(FareConfig {
         admin: ctx.accounts.admin.key(),
-        mode_0_fare,
-        mode_1_fare,
+        bus_fare: mode_0_fare,      // Transport mode 0: bus
+        train_fare: mode_1_fare,    // Transport mode 1: train
         currency_mint,
         total_tickets_sold: 0,
         monthly_pass_price,

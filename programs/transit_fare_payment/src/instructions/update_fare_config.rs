@@ -26,8 +26,8 @@ pub struct UpdateFareConfig<'info> {
 /// 2. `[signer]` admin: [AccountInfo] Administrator account
 ///
 /// Data:
-/// - mode_0_fare: [Option<u64>] New transport mode 0 fare amount (optional)
-/// - mode_1_fare: [Option<u64>] New transport mode 1 fare amount (optional)
+/// - mode_0_fare: [Option<u64>] New bus fare amount (transport mode 0 = bus, optional)
+/// - mode_1_fare: [Option<u64>] New train fare amount (transport mode 1 = train, optional)
 /// - monthly_pass_price: [Option<u64>] New monthly subscription price (optional)
 /// - yearly_pass_price: [Option<u64>] New yearly subscription price (optional)
 pub fn handler(
@@ -38,11 +38,11 @@ pub fn handler(
     yearly_pass_price: Option<u64>,
 ) -> Result<()> {
     if let Some(fare) = mode_0_fare {
-        ctx.accounts.fare_config.mode_0_fare = fare;
+        ctx.accounts.fare_config.bus_fare = fare;
     }
 
     if let Some(fare) = mode_1_fare {
-        ctx.accounts.fare_config.mode_1_fare = fare;
+        ctx.accounts.fare_config.train_fare = fare;
     }
 
     if let Some(price) = monthly_pass_price {

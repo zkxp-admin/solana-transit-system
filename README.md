@@ -9,7 +9,7 @@ The Transit Fare Payment System is a Solana-based smart contract application tha
 ### Key Features
 
 - **Decentralized Ticketing**: Purchase and validate transit tickets directly on the Solana blockchain
-- **Multiple Transport Modes**: Support for different transport modes (e.g., Mode 0 and Mode 1) with configurable pricing
+- **Multiple Transport Modes**: Support for bus (Mode 0) and train (Mode 1) with configurable pricing for each
 - **SPL Token Payments**: All fares are paid using configurable SPL tokens
 - **Web3 Wallet Integration**: Full support for Phantom, Solflare, and other Solana wallet adapters
 - **Transparent Pricing**: Admin-controlled fare configuration with real-time price updates
@@ -81,15 +81,15 @@ transit_fare_payment_program/
 
 ### 1. Fare Configuration Management
 
-Initialize and manage transit fare prices for different transport modes.
+Initialize and manage transit fare prices for different transport modes (bus and train).
 
 **Instructions:**
-- `initialize_fare_config`: Set up initial fare prices for Mode 0 and Mode 1
+- `initialize_fare_config`: Set up initial fare prices for bus (Mode 0) and train (Mode 1)
 - `update_fare_config`: Update fare amounts for one or both transport modes
 
 **Parameters:**
-- `mode_0_fare`: Fare amount for transport mode 0 (in base tokens)
-- `mode_1_fare`: Fare amount for transport mode 1 (in base tokens)
+- `mode_0_fare`: Fare amount for bus (transport mode 0 = bus, in base tokens)
+- `mode_1_fare`: Fare amount for train (transport mode 1 = train, in base tokens)
 - `currency_mint`: SPL token mint address used for payments
 
 ### 2. Ticket Purchase System
@@ -99,9 +99,9 @@ Users can purchase transit tickets by paying the configured fare in SPL tokens.
 **Instruction:** `purchase_ticket`
 
 **Parameters:**
-- `transport_mode`: Transport mode (0 or 1)
+- `transport_mode`: Transport mode (0 = bus, 1 = train)
 - `ticket_id`: Unique identifier for the ticket
-- `amount`: Payment amount (must match the configured fare)
+- `amount`: Payment amount (must match the configured fare for the selected mode)
 
 **Features:**
 - Automatic passenger account creation
@@ -147,8 +147,8 @@ Log payment transactions on-chain for audit trails.
 
 ### FareConfig
 - `admin`: Administrator public key
-- `mode_0_fare`: Transport mode 0 fare amount
-- `mode_1_fare`: Transport mode 1 fare amount
+- `bus_fare`: Bus fare amount (transport mode 0)
+- `train_fare`: Train fare amount (transport mode 1)
 - `currency_mint`: SPL token mint address
 - `total_tickets_sold`: Total tickets issued by the system
 - `bump`: Bump seed for PDA derivation
@@ -163,7 +163,7 @@ Log payment transactions on-chain for audit trails.
 ### Ticket
 - `user`: Ticket owner's public key
 - `ticket_id`: Unique ticket identifier
-- `transport_mode`: Transport mode (0 or 1)
+- `transport_mode`: Transport mode (0 = bus, 1 = train)
 - `fare_amount`: Amount paid for the ticket
 - `purchase_timestamp`: Unix timestamp of purchase
 - `status`: Ticket status (0 = unused, 1 = used)
@@ -246,8 +246,8 @@ Current Program ID: `FQB354YeYLHky7omGhQXQxQ2QBcuYLq2QXiF4gdVogJt`
 import { initializeFareConfigSendAndConfirm } from './app/solana/client/rpc';
 
 const result = await initializeFareConfigSendAndConfirm({
-  mode0Fare: BigInt(5000000),    // 0.005 SOL
-  mode1Fare: BigInt(10000000),   // 0.01 SOL
+  mode0Fare: BigInt(5000000),    // Bus fare: 0.005 SOL (Mode 0)
+  mode1Fare: BigInt(10000000),   // Train fare: 0.01 SOL (Mode 1)
   currencyMint: new PublicKey('EPjFWaLb3odcccccccccccccccccccccccccccccc'),
   signers: {
     feePayer: signer,
@@ -262,9 +262,9 @@ const result = await initializeFareConfigSendAndConfirm({
 import { purchaseTicketSendAndConfirm } from './app/solana/client/rpc';
 
 const result = await purchaseTicketSendAndConfirm({
-  transportMode: 0,
+  transportMode: 0,  // 0 = bus, 1 = train
   ticketId: BigInt(1),
-  amount: BigInt(5000000),  // 0.005 SOL
+  amount: BigInt(5000000),  // Must match configured fare for the transport mode
   userTokenAccount: userTokenAccount,
   systemTokenAccount: systemTokenAccount,
   source: userTokenSource,

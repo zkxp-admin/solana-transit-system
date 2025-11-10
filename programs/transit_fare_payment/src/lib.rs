@@ -3,6 +3,10 @@ use std::str::FromStr;
 
 declare_id!("FQB354YeYLHky7omGhQXQxQ2QBcuYLq2QXiF4gdVogJt");
 
+// Transport mode constants
+pub const TRANSPORT_MODE_BUS: u8 = 0;
+pub const TRANSPORT_MODE_TRAIN: u8 = 1;
+
 // Module declarations
 mod error;
 mod instructions;
@@ -19,14 +23,14 @@ pub mod transit_fare_payment {
     /// Initialize the fare configuration with default values
     ///
     /// Accounts:
-    /// 0. `[writable, signer]` fee_payer: [AccountInfo] 
-    /// 1. `[writable]` fare_config: [FareConfig] 
+    /// 0. `[writable, signer]` fee_payer: [AccountInfo]
+    /// 1. `[writable]` fare_config: [FareConfig]
     /// 2. `[signer]` admin: [AccountInfo] Administrator account
     /// 3. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
     ///
     /// Data:
-    /// - mode_0_fare: [u64] Default transport mode 0 fare amount
-    /// - mode_1_fare: [u64] Default transport mode 1 fare amount
+    /// - mode_0_fare: [u64] Default bus fare amount (transport mode 0 = bus)
+    /// - mode_1_fare: [u64] Default train fare amount (transport mode 1 = train)
     /// - currency_mint: [Pubkey] Currency mint address
     pub fn initialize_fare_config(ctx: Context<InitializeFareConfig>, mode_0_fare: u64, mode_1_fare: u64, currency_mint: Pubkey, monthly_pass_price: u64, yearly_pass_price: u64) -> Result<()> {
         initialize_fare_config::handler(ctx, mode_0_fare, mode_1_fare, currency_mint, monthly_pass_price, yearly_pass_price)
@@ -40,8 +44,8 @@ pub mod transit_fare_payment {
     /// 2. `[signer]` admin: [AccountInfo] Administrator account
     ///
     /// Data:
-    /// - mode_0_fare: [Option<u64>] New transport mode 0 fare amount (optional)
-    /// - mode_1_fare: [Option<u64>] New transport mode 1 fare amount (optional)
+    /// - mode_0_fare: [Option<u64>] New bus fare amount (transport mode 0 = bus, optional)
+    /// - mode_1_fare: [Option<u64>] New train fare amount (transport mode 1 = train, optional)
     pub fn update_fare_config(ctx: Context<UpdateFareConfig>, mode_0_fare: Option<u64>, mode_1_fare: Option<u64>, monthly_pass_price: Option<u64>, yearly_pass_price: Option<u64>) -> Result<()> {
         update_fare_config::handler(ctx, mode_0_fare, mode_1_fare, monthly_pass_price, yearly_pass_price)
     }
@@ -65,7 +69,7 @@ pub mod transit_fare_payment {
     /// 13. `[]` token_program: [AccountInfo] Auto-generated, TokenProgram
     ///
     /// Data:
-    /// - transport_mode: [u8] Transport mode (0 or 1)
+    /// - transport_mode: [u8] Transport mode (0 = bus, 1 = train)
     /// - ticket_id: [u64] Unique ticket identifier
     /// - amount: [u64] Amount to pay for the ticket
     pub fn purchase_ticket(ctx: Context<PurchaseTicket>, transport_mode: u8, ticket_id: u64, amount: u64) -> Result<()> {
