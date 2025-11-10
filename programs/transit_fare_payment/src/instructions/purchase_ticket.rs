@@ -123,7 +123,7 @@ impl<'info> PurchaseTicket<'info> {
 /// 13. `[]` token_program: [AccountInfo] Auto-generated, TokenProgram
 ///
 /// Data:
-/// - transport_mode: [u8] Transport mode (0 or 1)
+/// - transport_mode: [u8] Transport mode (0 = bus, 1 = train)
 /// - ticket_id: [u64] Unique ticket identifier
 /// - amount: [u64] Amount to pay for the ticket
 pub fn handler(
@@ -132,14 +132,14 @@ pub fn handler(
     ticket_id: u64,
     amount: u64,
 ) -> Result<()> {
-    // Validate transport mode
-    require!(transport_mode == 0 || transport_mode == 1, FarePaymentError::InvalidTransportMode);
+    // Validate transport mode (0 = bus, 1 = train)
+    require!(transport_mode == crate::TRANSPORT_MODE_BUS || transport_mode == crate::TRANSPORT_MODE_TRAIN, FarePaymentError::InvalidTransportMode);
 
-    // Validate that the amount matches the fare
-    let fare = if transport_mode == 0 {
-        ctx.accounts.fare_config.mode_0_fare
+    // Get the appropriate fare based on transport mode
+    let fare = if transport_mode == crate::TRANSPORT_MODE_BUS {
+        ctx.accounts.fare_config.bus_fare
     } else {
-        ctx.accounts.fare_config.mode_1_fare
+        ctx.accounts.fare_config.train_fare
     };
 
     require!(amount == fare, FarePaymentError::InvalidAmount);

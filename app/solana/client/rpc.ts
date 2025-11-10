@@ -46,8 +46,8 @@ export type InitializeFareConfigArgs = {
  * 3. `[]` system_program: {@link PublicKey} Auto-generated, for account initialization
  *
  * Data:
- * - mode_0_fare: {@link BigInt} Default transport mode 0 fare amount
- * - mode_1_fare: {@link BigInt} Default transport mode 1 fare amount
+ * - mode_0_fare: {@link BigInt} Default bus fare amount (transport mode 0 = bus)
+ * - mode_1_fare: {@link BigInt} Default train fare amount (transport mode 1 = train)
  * - currency_mint: {@link PublicKey} Currency mint address
  */
 export const initializeFareConfigBuilder = (
@@ -147,8 +147,8 @@ export type UpdateFareConfigArgs = {
  * 2. `[signer]` admin: {@link PublicKey} Administrator account
  *
  * Data:
- * - mode_0_fare: {@link BigInt | undefined} New transport mode 0 fare amount (optional)
- * - mode_1_fare: {@link BigInt | undefined} New transport mode 1 fare amount (optional)
+ * - mode_0_fare: {@link BigInt | undefined} New bus fare amount (transport mode 0 = bus, optional)
+ * - mode_1_fare: {@link BigInt | undefined} New train fare amount (transport mode 1 = train, optional)
  */
 export const updateFareConfigBuilder = (
 	args: UpdateFareConfigArgs,

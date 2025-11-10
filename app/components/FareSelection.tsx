@@ -55,7 +55,7 @@ const FareSelection: React.FC<FareSelectionProps> = ({
       // Mock success with a realistic delay
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      const modeName = selectedMode === 0 ? 'Mode 0' : 'Mode 1';
+      const modeName = selectedMode === 0 ? 'Bus' : 'Train';
       alert(`Successfully purchased ${modeName} transit ticket for ${Number(fareAmount) / 1e9} SOL!`);
     } catch (err) {
       console.error('Purchase failed:', err);
@@ -97,8 +97,8 @@ const FareSelection: React.FC<FareSelectionProps> = ({
               </svg>
             </div>
             <div className="text-left">
-              <h3 className="font-semibold text-gray-800">Transport Mode 0</h3>
-              <p className="text-sm text-gray-600">Standard fare</p>
+              <h3 className="font-semibold text-gray-800">Bus (Mode 0)</h3>
+              <p className="text-sm text-gray-600">Transit by bus</p>
             </div>
           </div>
           <div className="text-right">
@@ -121,8 +121,8 @@ const FareSelection: React.FC<FareSelectionProps> = ({
               </svg>
             </div>
             <div className="text-left">
-              <h3 className="font-semibold text-gray-800">Transport Mode 1</h3>
-              <p className="text-sm text-gray-600">Premium fare</p>
+              <h3 className="font-semibold text-gray-800">Train (Mode 1)</h3>
+              <p className="text-sm text-gray-600">Transit by train</p>
             </div>
           </div>
           <div className="text-right">
@@ -135,7 +135,7 @@ const FareSelection: React.FC<FareSelectionProps> = ({
         <div className={`rounded-lg p-4 mb-6 ${hasActiveSubscription ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
           <div className="flex justify-between items-center">
             <span className="font-medium text-gray-700">Selected:</span>
-            <span className="font-bold text-gray-800">Mode {selectedMode}</span>
+            <span className="font-bold text-gray-800">{selectedMode === 0 ? 'Bus' : 'Train'} (Mode {selectedMode})</span>
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="font-medium text-gray-700">Fare Amount:</span>
