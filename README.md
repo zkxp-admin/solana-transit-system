@@ -439,4 +439,3 @@ MIT License
 - Mobile application support
 - Analytics dashboard for transit operators
 - NFT-based ticket system
-- Subscription/pass system for frequent travelers
